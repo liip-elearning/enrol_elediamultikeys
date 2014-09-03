@@ -212,12 +212,11 @@ class enrol_elediamultikeys_plugin extends enrol_plugin {
 
                 if ($onewaykey = $DB->get_record('block_eledia_multikeys',
                         array('code' => $data->enrolpassword, 'course' => $instance->courseid))) {
-                    if($onewaykey->user){//Schlüssel wurde schon verwendet
+                    if($onewaykey->userid){//Schlüssel wurde schon verwendet
                         $output = $OUTPUT->notification(get_string('keyused', 'enrol_elediamultikeys')).$output;
                         return $output;
                     }
                     $cfginfomail = $this->get_config('infomail');
-                    $this->enrol_user($instance, $USER->id, $instance->roleid, $timestart, $tineend);
                     add_to_log($instance->courseid, 'course', 'enrol', '../enrol/users.php?id='.$instance->courseid, $instance->courseid);
                     if (!empty($cfginfomail)) {
                         $this->send_infomail($cfginfomail,
@@ -226,9 +225,10 @@ class enrol_elediamultikeys_plugin extends enrol_plugin {
                                             $USER);
                     }
 
-                    $onewaykey->user = $USER->id;
+                    $onewaykey->userid = $USER->id;
                     $onewaykey->timeused = time();
                     $DB->update_record('block_eledia_multikeys', $onewaykey);
+                    $this->enrol_user($instance, $USER->id, $instance->roleid, $timestart, $tineend);
                 }else{// Key invalid.
                     $output = $OUTPUT->notification(get_string('keynotfound', 'enrol_elediamultikeys')).$output;
                     return $output;

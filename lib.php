@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+use enrol_elediamultikeys\event\elediamultikeys_enrol;
+
 /**
  *
  *
@@ -217,7 +219,6 @@ class enrol_elediamultikeys_plugin extends enrol_plugin {
                         return $output;
                     }
                     $cfginfomail = $this->get_config('infomail');
-                    add_to_log($instance->courseid, 'course', 'enrol', '../enrol/users.php?id='.$instance->courseid, $instance->courseid);
                     if (!empty($cfginfomail)) {
                         $this->send_infomail($cfginfomail,
                                             $data->enrolpassword,
@@ -229,6 +230,14 @@ class enrol_elediamultikeys_plugin extends enrol_plugin {
                     $onewaykey->timeused = time();
                     $DB->update_record('block_eledia_multikeys', $onewaykey);
                     $this->enrol_user($instance, $USER->id, $instance->roleid, $timestart, $tineend);
+                    $context = context_course::instance($instance->courseid);
+                    $event = elediamultikeys_enrol::create(array(
+                        'courseid' => $instance->courseid,
+                        'objectid' => $USER->id,
+                        'userid' => $USER->id,
+                        'context' => $context,
+                    ));
+                    $event->trigger();
                 }else{// Key invalid.
                     $output = $OUTPUT->notification(get_string('keynotfound', 'enrol_elediamultikeys')).$output;
                     return $output;

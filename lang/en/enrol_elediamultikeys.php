@@ -76,3 +76,11 @@ Key: {$a->key}
 User: {$a->user}
 Course: {$a->course}
 ';
+
+$string['elediamultikeys_enrol_name'] = 'Enrol success';
+$string['elediamultikeys_enrol_explanation'] = 'Event log when a user has been successfully enrolled.';
+$string['elediamultikeys_enrol_description'] = 'The user {$a->user} has been successfully enrolled to the course {$a->course}.';
+
+$string['elediamultikeys_unenrol_name'] = 'Unenrol success';
+$string['elediamultikeys_unenrol_explanation'] = 'Event log when a user has been successfully unenrolled.';
+$string['elediamultikeys_unenrol_description'] = 'The user {$a->user} has been successfully unenrolled from the course {$a->course}.';

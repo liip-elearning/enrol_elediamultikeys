@@ -15,6 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+use enrol_elediamultikeys\event\elediamultikeys_unenrol;
+
 require('../../config.php');
 
 $enrolid = required_param('enrolid', PARAM_INT);
@@ -42,7 +44,13 @@ $PAGE->set_title($plugin->get_instance_name($instance));
 
 if ($confirm and confirm_sesskey()) {
     $plugin->unenrol_user($instance, $USER->id);
-    add_to_log($course->id, 'course', 'unenrol', '../enrol/users.php?id='.$course->id, $course->id); //there should be userid somewhere!
+    $event = elediamultikeys_unenrol::create(array(
+        'courseid' => $course->id,
+        'objectid' => $USER->id,
+        'userid' => $USER->id,
+        'context' => $context,
+    ));
+    $event->trigger();
     redirect(new moodle_url('/index.php'));
 }
 

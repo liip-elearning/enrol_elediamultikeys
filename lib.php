@@ -174,11 +174,11 @@ class enrol_elediamultikeys_plugin extends enrol_plugin {
             return null;
         }
 
-        if ($instance->enrolstartdate != 0 and $instance->enrolstartdate < time()) {
+        if ($instance->enrolstartdate != 0 and $instance->enrolstartdate >= time()) {
             return null;
         }
 
-        if ($instance->enrolenddate != 0 and $instance->enrolenddate > time()) {
+        if ($instance->enrolenddate != 0 and $instance->enrolenddate <= time()) {
             return null;
         }
 
